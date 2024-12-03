@@ -10,8 +10,10 @@ require('dotenv').config();
 app.use(cors());
 app.use(express.json());
 
-// mongoDB
 
+
+
+// mongoDB server cannected
 
 const uri = `mongodb+srv://${process.env.DB_user}:${process.env.DB_password}@cluster0.63kgb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -33,6 +35,20 @@ async function run() {
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
+
+
+
+
+    // database filed create 
+    const donationUsersCallection = client.db("donationDB").collection("users");
+
+    // user added in database
+    app.post('/users', async(req, res)=>{
+        const newUser = req.body;
+        console.log(newUser);
+        const result = await donationUsersCallection.insertOne(newUser);
+        res.send(result);
+    })
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
