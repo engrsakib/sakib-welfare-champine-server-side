@@ -40,7 +40,7 @@ async function run() {
     // get users
     app.get("/users/:mail", async (req, res) => {
       const email = req.params.mail;
-      console.log(email);
+    //   console.log(email); 
       const cursor = donationCallection.find().filter({ mail: email });
     //   console.log(cursor);
       const result = await cursor.toArray();
@@ -54,6 +54,15 @@ async function run() {
       const result = await donationCallection.insertOne(newUser);
       res.send(result);
     });
+
+    // donation related work
+    const Dcalection = client.db('donatin_server').collection('donation');
+    app.post('/donations', async(req, res)=>{
+        const newDonation = req.body;
+        const result = await Dcalection.insertOne(newDonation);
+        res.send(result);
+    });
+    
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
