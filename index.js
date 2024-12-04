@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
 require("dotenv").config();
 //
@@ -40,36 +40,45 @@ async function run() {
     // get users
     app.get("/users/:mail", async (req, res) => {
       const email = req.params.mail;
-    //   console.log(email); 
+      //   console.log(email);
       const cursor = donationCallection.find().filter({ mail: email });
-    //   console.log(cursor);
+      //   console.log(cursor);
       const result = await cursor.toArray();
       res.send(result);
-    //   console.log(result);
+      //   console.log(result);
     });
     // user added in database
     app.post("/users", async (req, res) => {
       const newUser = req.body;
-    //   console.log(newUser);
+      //   console.log(newUser);
       const result = await donationCallection.insertOne(newUser);
       res.send(result);
     });
 
     // donation related work
-    const Dcalection = client.db('donatin_server').collection('donation');
+    const Dcalection = client.db("donatin_server").collection("donation");
     // insert database
-    app.post('/donations', async(req, res)=>{
-        const newDonation = req.body;
-        const result = await Dcalection.insertOne(newDonation);
-        res.send(result);
+    app.post("/donations", async (req, res) => {
+      const newDonation = req.body;
+      const result = await Dcalection.insertOne(newDonation);
+      res.send(result);
     });
     // get database
-    app.get('/donations',async(req,res)=>{
-        const cursor = Dcalection.find();
-        const result = await cursor.toArray();
-        res.send(result);
-    })
+    app.get("/donations", async (req, res) => {
+      const cursor = Dcalection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // deatils data fetch
+    app.get("/donations/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const cursor = Dcalection.find().filter({ _id: new ObjectId(id) });
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
+    
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
