@@ -38,10 +38,11 @@ async function run() {
 
     // user related query
     // get users
-    app.get("/users/", async(req, res)=>{
+    app.get("/users/:mail", async(req, res)=>{
+        const email = req.params.mail
         const cursor = donationCallection
           .find()
-          .filter({ mail: "apasOOOnazmussakib01@gmail.com" });
+          .filter({ mail: email });
         const result = await cursor.toArray();
         res.send(result);
     });
