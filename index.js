@@ -38,18 +38,19 @@ async function run() {
 
     // user related query
     // get users
-    app.get("/users/:mail", async(req, res)=>{
-        const email = req.params.mail
-        const cursor = donationCallection
-          .find()
-          .filter({ mail: email });
-        const result = await cursor.toArray();
-        res.send(result);
+    app.get("/users/:mail", async (req, res) => {
+      const email = req.params.mail;
+      console.log(email);
+      const cursor = donationCallection.find().filter({ mail: email });
+    //   console.log(cursor);
+      const result = await cursor.toArray();
+      res.send(result);
+    //   console.log(result);
     });
     // user added in database
     app.post("/users", async (req, res) => {
       const newUser = req.body;
-      console.log(newUser);
+    //   console.log(newUser);
       const result = await donationCallection.insertOne(newUser);
       res.send(result);
     });
