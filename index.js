@@ -57,12 +57,19 @@ async function run() {
 
     // donation related work
     const Dcalection = client.db('donatin_server').collection('donation');
+    // insert database
     app.post('/donations', async(req, res)=>{
         const newDonation = req.body;
         const result = await Dcalection.insertOne(newDonation);
         res.send(result);
     });
-    
+    // get database
+    app.get('/donations',async(req,res)=>{
+        const cursor = Dcalection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+    })
+
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
