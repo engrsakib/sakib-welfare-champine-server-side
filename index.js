@@ -3,15 +3,12 @@ const cors = require("cors");
 const app = express();
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const port = process.env.PORT || 5000;
-require('dotenv').config();
-// 
+require("dotenv").config();
+//
 
 //middleware
 app.use(cors());
 app.use(express.json());
-
-
-
 
 // mongoDB server cannected
 
@@ -36,19 +33,25 @@ async function run() {
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
 
+    // database filed create
+    const donationCallection = client.db("donationDB").collection("users");
 
-
-
-    // database filed create 
-    const donationUsersCallection = client.db("donationDB").collection("users");
-
-    // user added in database
-    app.post('/users', async(req, res)=>{
-        const newUser = req.body;
-        console.log(newUser);
-        const result = await donationUsersCallection.insertOne(newUser);
+    // user related query
+    // get users
+    app.get("/users/", async(req, res)=>{
+        const cursor = donationCallection
+          .find()
+          .filter({ mail: "apasOOOnazmussakib01@gmail.com" });
+        const result = await cursor.toArray();
         res.send(result);
-    })
+    });
+    // user added in database
+    app.post("/users", async (req, res) => {
+      const newUser = req.body;
+      console.log(newUser);
+      const result = await donationCallection.insertOne(newUser);
+      res.send(result);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
