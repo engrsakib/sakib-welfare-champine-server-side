@@ -78,8 +78,16 @@ async function run() {
     });
 
     // my donation get
-    app.get("/donations/:email", async (res, req) => {
-      
+    app.get("/myDonations/:mail", async (req, res) => {
+      try {
+        const email = req.params.mail;
+    
+        const result = await Dcalection.find({ mail: email }).toArray();
+        res.send(result);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: "Internal Server Error" });
+      }
     });
   } finally {
     // Ensures that the client will close when you finish/error
