@@ -81,7 +81,7 @@ async function run() {
     app.get("/myDonations/:mail", async (req, res) => {
       try {
         const email = req.params.mail;
-    
+
         const result = await Dcalection.find({ mail: email }).toArray();
         res.send(result);
       } catch (error) {
@@ -91,18 +91,39 @@ async function run() {
     });
 
     // delete current user camp
-    app.delete("/myDonations/:id", async(req, res)=>{
+    app.delete("/myDonations/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)};
+      const query = { _id: new ObjectId(id) };
       const result = await Dcalection.deleteOne(query);
       res.send(result);
     });
 
-    // UPDATE MY CAMP 
+    // UPDATE MY CAMP
     app.get("/donationsUpadte/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)};
+      const query = { _id: new ObjectId(id) };
+
       const result = await Dcalection.findOne(query);
+      res.send(result);
+    });
+
+    app.put("/donationsUpadte/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: new ObjectId(id) };
+      const optional = { upsert: true };
+      const updated = req.body;
+      const updatedData = {
+        $set: {
+          deadline: updated.deadline,
+          minimumMoney: updated.minimumMoney,
+          title: updated.title,
+          photoURL: updated.photoURL,
+          type: updated.type,
+          description: updated.description,
+        },
+      }
+      const result = await Dcalection.updateOne(query, updatedData, optional);
       res.send(result);
     });
   } finally {
