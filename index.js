@@ -72,13 +72,15 @@ async function run() {
     // deatils data fetch
     app.get("/donations/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
       const cursor = Dcalection.find().filter({ _id: new ObjectId(id) });
       const result = await cursor.toArray();
       res.send(result);
     });
 
-    
+    // my donation get
+    app.get("/donations/:email", async (res, req) => {
+      
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
