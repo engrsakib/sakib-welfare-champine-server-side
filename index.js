@@ -97,6 +97,14 @@ async function run() {
       const result = await Dcalection.deleteOne(query);
       res.send(result);
     });
+
+    // UPDATE MY CAMP 
+    app.get("/donationsUpadte/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await Dcalection.findOne(query);
+      res.send(result);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
