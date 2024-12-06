@@ -120,6 +120,7 @@ async function run() {
           title: updated.title,
           photoURL: updated.photoURL,
           type: updated.type,
+          moneyNedd: updated.moneyNedd,
           description: updated.description,
         },
       }
