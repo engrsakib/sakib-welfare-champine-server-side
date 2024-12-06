@@ -69,6 +69,36 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
+
+    // ascending sort
+    app.get("/donations/sorted", async (req, res) => {
+        const cursor = Dcalection.find().sort({ minimumMoney: 1 });
+        const result = await cursor.toArray();
+        res.send(result);
+    });
+ 
+
+
+    // sort by date and time
+
+    // const { ObjectId } = require("mongodb");
+    // const moment = require("moment-timezone");
+
+    app.get("/activeDonations", async (req, res) => {
+      
+        const currentDate = new Date().toLocaleDateString("en-CA", {
+          timeZone: "Asia/Dhaka",
+        });
+
+        const cursor = Dcalection.find({
+          deadline: { $gt: currentDate },
+        }).limit(6);
+
+        const result = await cursor.toArray();
+        res.send(result);
+    });
+
     // deatils data fetch
     app.get("/donations/:id", async (req, res) => {
       const id = req.params.id;
@@ -79,15 +109,12 @@ async function run() {
 
     // my donation get
     app.get("/myDonations/:mail", async (req, res) => {
-      try {
+      
         const email = req.params.mail;
 
         const result = await Dcalection.find({ mail: email }).toArray();
         res.send(result);
-      } catch (error) {
-        console.error(error);
-        res.status(500).send({ error: "Internal Server Error" });
-      }
+      
     });
     // delete current user camp
     app.delete("/myDonations/:id", async (req, res) => {
@@ -115,11 +142,11 @@ async function run() {
       const updatedData = {
         $set: {
           deadline: updated.deadline,
-          minimumMoney: updated.minimumMoney,
+          minimumMoney: Number(updated.minimumMoney),
           title: updated.title,
           photoURL: updated.photoURL,
           type: updated.type,
-          moneyNedd: updated.moneyNedd,
+          moneyNedd: Number(updated.moneyNedd),
           description: updated.description,
         },
       };
@@ -135,17 +162,16 @@ async function run() {
       const result = await myFund.insertOne(newDonation);
       res.send(result);
     });
-    app.get("/myMoney/:mail", async(req, res)=>{
+    app.get("/myMoney/:mail", async (req, res) => {
+      try {
+        const email = req.params.mail;
 
-     try {
-       const email = req.params.mail;
-
-       const result = await myFund.find({ email: email }).toArray();
-       res.send(result);
-     } catch (error) {
-       console.error(error);
-       res.status(500).send({ error: "Internal Server Error" });
-     }
+        const result = await myFund.find({ email: email }).toArray();
+        res.send(result);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: "Internal Server Error" });
+      }
     });
   } finally {
     // Ensures that the client will close when you finish/error
