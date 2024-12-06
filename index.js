@@ -89,7 +89,6 @@ async function run() {
         res.status(500).send({ error: "Internal Server Error" });
       }
     });
-
     // delete current user camp
     app.delete("/myDonations/:id", async (req, res) => {
       const id = req.params.id;
@@ -109,7 +108,7 @@ async function run() {
 
     app.put("/donationsUpadte/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
+      // console.log(id);
       const query = { _id: new ObjectId(id) };
       const optional = { upsert: true };
       const updated = req.body;
@@ -123,9 +122,30 @@ async function run() {
           moneyNedd: updated.moneyNedd,
           description: updated.description,
         },
-      }
+      };
       const result = await Dcalection.updateOne(query, updatedData, optional);
       res.send(result);
+    });
+
+    // my Donations added
+    // myMoney
+    const myFund = client.db("my_donatin_server").collection("my_Donation");
+    app.post("/myMoney", async (req, res) => {
+      const newDonation = req.body;
+      const result = await myFund.insertOne(newDonation);
+      res.send(result);
+    });
+    app.get("/myMoney/:mail", async(req, res)=>{
+
+     try {
+       const email = req.params.mail;
+
+       const result = await myFund.find({ email: email }).toArray();
+       res.send(result);
+     } catch (error) {
+       console.error(error);
+       res.status(500).send({ error: "Internal Server Error" });
+     }
     });
   } finally {
     // Ensures that the client will close when you finish/error
