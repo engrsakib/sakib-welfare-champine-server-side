@@ -10,6 +10,13 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  next();
+});
+
+
 // mongoDB server cannected
 
 const uri = `mongodb+srv://${process.env.DB_user}:${process.env.DB_password}@cluster0.63kgb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -50,7 +57,7 @@ async function run() {
     // user added in database
     app.post("/users", async (req, res) => {
       const newUser = req.body;
-      //   console.log(newUser);
+        console.log(newUser);
       const result = await donationCallection.insertOne(newUser);
       res.send(result);
     });
