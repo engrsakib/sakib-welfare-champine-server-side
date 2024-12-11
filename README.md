@@ -70,7 +70,7 @@ A comprehensive platform designed for community welfare and fundraising, enablin
 
 ## GitHub Repositories
 - **Server Repository:** [b10-a10-server-side-engrsakib](https://github.com/engrsakib/sakib-welfare-champine-server-side)
-- **Client Repository:** [b10-a10-client-side-engrsakib](https://github.com/programming-hero-web-course2/b10-a10-client-side-engrsakib)
+- **Client Repository:** [b10-a10-client-side-engrsakib](https://github.com/engrsakib/sakib-welfare-champine-client-side)
 
 ## How to Run the Server
 1. Clone the repository:
