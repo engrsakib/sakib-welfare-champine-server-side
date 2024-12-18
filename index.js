@@ -23,7 +23,23 @@ app.use((req, res, next) => {
   next();
 });
 
-
+// coockis middleware
+const logger = (req, res, next) => {
+  next();
+};
+const veryfyToken = (req, res, next) => {
+  const token = req?.cookies?.token;
+  if (!token) {
+    return res.status(401).send({ massage: "Unauthorize token" });
+  }
+  jwt.verify(token, process.env.JWT_SEC, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ massage: "unauthorize access" });
+    }
+    req.decoded = decoded;
+    next();
+  });
+};
 // mongoDB server cannected
 
 const uri = `mongodb+srv://${process.env.DB_user}:${process.env.DB_password}@cluster0.63kgb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -63,24 +79,22 @@ async function run() {
     });
 
     // auth related api
-    app.post('/jwt', async(req, res)=>{
+    app.post("/jwt", async (req, res) => {
       const user = req.body;
       const token = jwt.sign(user, process.env.JWT_SEC, { expiresIn: "1h" });
       res
-      .cookie('token', token,{
-        httpOnly: true,
-        secure: false,
-        sameSite: 'none'
-      })
-      .send({success : true})
-    })
-
-
+        .cookie("token", token, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "Lax",
+        })
+        .send({ success: true });
+    });
 
     // user added in database
     app.post("/users", async (req, res) => {
       const newUser = req.body;
-        console.log(newUser);
+      console.log(newUser);
       const result = await donationCallection.insertOne(newUser);
       res.send(result);
     });
@@ -100,15 +114,12 @@ async function run() {
       res.send(result);
     });
 
-
     // ascending sort
     app.get("/donations/sorted", async (req, res) => {
-        const cursor = Dcalection.find().sort({ minimumMoney: 1 });
-        const result = await cursor.toArray();
-        res.send(result);
+      const cursor = Dcalection.find().sort({ minimumMoney: 1 });
+      const result = await cursor.toArray();
+      res.send(result);
     });
- 
-
 
     // sort by date and time
 
@@ -116,17 +127,16 @@ async function run() {
     // const moment = require("moment-timezone");
 
     app.get("/activeDonations", async (req, res) => {
-      
-        const currentDate = new Date().toLocaleDateString("en-CA", {
-          timeZone: "Asia/Dhaka",
-        });
+      const currentDate = new Date().toLocaleDateString("en-CA", {
+        timeZone: "Asia/Dhaka",
+      });
 
-        const cursor = Dcalection.find({
-          deadline: { $gt: currentDate },
-        }).limit(6);
+      const cursor = Dcalection.find({
+        deadline: { $gt: currentDate },
+      }).limit(6);
 
-        const result = await cursor.toArray();
-        res.send(result);
+      const result = await cursor.toArray();
+      res.send(result);
     });
 
     // deatils data fetch
@@ -139,12 +149,10 @@ async function run() {
 
     // my donation get
     app.get("/myDonations/:mail", async (req, res) => {
-      
-        const email = req.params.mail;
+      const email = req.params.mail;
 
-        const result = await Dcalection.find({ mail: email }).toArray();
-        res.send(result);
-      
+      const result = await Dcalection.find({ mail: email }).toArray();
+      res.send(result);
     });
     // delete current user camp
     app.delete("/myDonations/:id", async (req, res) => {
@@ -192,10 +200,15 @@ async function run() {
       const result = await myFund.insertOne(newDonation);
       res.send(result);
     });
-    app.get("/myMoney/:mail", async (req, res) => {
+
+    app.get("/myMoney/:mail", veryfyToken, async (req, res) => {
       try {
         const email = req.params.mail;
-
+        // console.log("object", req.cookies);
+        // console.log(req.user.email);
+        if (req.decoded.email != email) {
+          return res.status(403).send({ massage: "You are fake user" });
+        }
         const result = await myFund.find({ email: email }).toArray();
         res.send(result);
       } catch (error) {
