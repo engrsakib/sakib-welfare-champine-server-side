@@ -66,7 +66,7 @@ A comprehensive platform designed for community welfare and fundraising, enablin
    - **Functionality:** Fetches campaigns created by the logged-in user.
 
 ## Live Site
-[Visit Sakib Welfare](https://engrsakib-p-hero-assignment9.surge.sh/)
+[Visit Sakib Welfare](https://sakib-welfare-champine.netlify.app/)
 
 ## GitHub Repositories
 - **Server Repository:** [server-side-engrsakib](https://github.com/engrsakib/sakib-welfare-champine-server-side)
