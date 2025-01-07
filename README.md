@@ -69,13 +69,13 @@ A comprehensive platform designed for community welfare and fundraising, enablin
 [Visit Sakib Welfare](https://engrsakib-p-hero-assignment9.surge.sh/)
 
 ## GitHub Repositories
-- **Server Repository:** [b10-a10-server-side-engrsakib](https://github.com/programming-hero-web-course2/b10-a10-server-side-engrsakib)
-- **Client Repository:** [b10-a10-client-side-engrsakib](https://github.com/programming-hero-web-course2/b10-a10-client-side-engrsakib)
+- **Server Repository:** [server-side-engrsakib](https://github.com/engrsakib/sakib-welfare-champine-server-side)
+- **Client Repository:** [client-side-engrsakib](https://github.com/engrsakib/sakib-welfare-champine-client-side)
 
 ## How to Run the Server
 1. Clone the repository:
    ```bash
-   git clone https://github.com/programming-hero-web-course2/b10-a10-server-side-engrsakib.git
+   git clone https://github.com/engrsakib/sakib-welfare-champine-server-side
    cd b10-a10-server-side-engrsakib
 
    >> nodemon index.js
